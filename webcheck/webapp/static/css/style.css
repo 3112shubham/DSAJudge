@@ -1,0 +1,164 @@
+/* style.css */
+
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+    font-family: 'Poppins', sans-serif;
+    color: #f0f0f0;
+    min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.navbar a {
+    color: #f0f0f0;
+    text-decoration: none;
+    margin-left: 25px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #58a6ff;
+}
+
+.logo {
+    width: 60px;
+}
+
+/* Container */
+.container {
+    max-width: 500px;
+    margin: 80px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+}
+
+h1, h2 {
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+form input, form button {
+    width: 100%;
+    padding: 14px 20px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+}
+
+form input {
+    background: rgba(255,255,255,0.05);
+    color: #eee;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: 0.3s;
+}
+
+form input:focus {
+    border: 1px solid #58a6ff;
+    background: rgba(255,255,255,0.08);
+}
+
+form button {
+    background: linear-gradient(135deg, #003399, #0055cc);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+form button:hover {
+    background: linear-gradient(135deg, #0055cc, #003399);
+    transform: scale(1.02);
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 120px 20px 80px;
+}
+
+.hero h1 {
+    background: linear-gradient(90deg, #58a6ff, #66c7ff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+
+.hero p {
+    font-size: 20px;
+    color: #ccc;
+    margin-bottom: 40px;
+}
+
+.hero .btn {
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    background: linear-gradient(135deg, #003399, #0055cc);
+    margin: 0 12px;
+    transition: all 0.3s ease;
+}
+
+.hero .btn:hover {
+    background: linear-gradient(135deg, #0055cc, #003399);
+    transform: translateY(-2px);
+}
+
+/* Cards */
+.card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 16px;
+    margin: 20px 0;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+.btn-card {
+    display: inline-block;
+    padding: 16px 28px;
+    background: linear-gradient(90deg, #58a6ff, #1e90ff);
+    color: white;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-card:hover {
+    background: linear-gradient(90deg, #66c7ff, #58a6ff);
+    transform: translateY(-2px);
+}
+

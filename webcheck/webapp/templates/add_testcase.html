@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Test Case</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="navbar">
+    <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+    <a href="{% url 'add_question' %}">Add New Question</a>
+</div>
+
+<div class="container">
+    <h1>{{ question.question_name }}</h1>
+    <p>{{ question.description }}</p>
+
+    <h3>First 3 Test Cases:</h3>
+    {% for t in test_cases %}
+        <div class="card">
+            <p><strong>Input:</strong> {{ t.input_data }}</p>
+            <p><strong>Expected Output:</strong> {{ t.expected_output }}</p>
+        </div>
+    {% empty %}
+        <p>No test cases added yet.</p>
+    {% endfor %}
+
+    <h3>Add New Test Case:</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Test Case</button>
+        <button type="button" onclick="confirmSave()">Save Question</button>
+    </form>
+
+    <h3>Constraints:</h3>
+    <div class="card">
+        <p>{{ question.constraints }}</p>
+    </div>
+
+</div>
+<script>
+function confirmSave() {
+    if (confirm("Are you sure you want to stop adding test cases and save this question?")) {
+        window.location.href = "{% url 'view_questions' %}";
+    }
+}
+</script>
+
+</body>
+</html>

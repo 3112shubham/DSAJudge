@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="navbar">
+    <div>
+        <a href="#"><img src="{% static 'images/logo.png' %}" alt="Logo" class="logo"></a>
+    </div>
+    <div>
+        <a href="{% url 'add_question' %}" >Add Question</a>
+        <a href="#" >Create Contest</a>
+        <a href="{% url 'view_questions' %}">View All Questions</a>
+        <a href="{% url 'admin_logout' %}">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Welcome, Admin {{ request.user.first_name }}</h1>
+
+    <div class="card">
+        <h2>Manage Contests & Questions</h2>
+        <p>Use the links in the navbar to add questions, create contests, or log out.</p>
+    </div>
+
+    <div class="card">
+        <a href="#" class="btn-card">Add New Question</a>
+        <a href="#" class="btn-card">Create Contest</a>
+    </div>
+</div>
+
+</body>
+</html>

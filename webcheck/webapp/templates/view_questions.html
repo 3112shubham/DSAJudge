@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Questions</title>
+</head>
+<body>
+    <h2>All Questions</h2>
+    {% if questions %}
+        <ul>
+        {% for question in questions %}
+            <li>{{ question.title }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No questions found.</p>
+    {% endif %}
+</body>
+</html>
