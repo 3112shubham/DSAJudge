@@ -1,0 +1,1021 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gryphon Academy - Elite Coding Challenges</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a0ca3;
+      --secondary: #4cc9f0;
+      --accent: #7209b7;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4ade80;
+      --gradient: linear-gradient(135deg, var(--primary), var(--accent));
+      --gradient-light: linear-gradient(135deg, #4cc9f0, #4361ee);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f5faff;
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Particles background */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(125deg, #0f172a, #1e293b);
+    }
+
+    /* Navbar */
+    .navbar {
+      padding: 16px 5%;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: transparent;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s ease;
+    }
+
+    .navbar.scrolled {
+      padding: 12px 5%;
+      background: transparent;
+    }
+
+    .navbar a {
+      color: #99a0a8ff;
+      text-decoration: none;
+      margin-left: 25px;
+      font-size: 16px;
+      font-weight: 500;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .navbar a:hover {
+      color: var(--secondary);
+    }
+
+    .navbar a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--secondary);
+      transition: width 0.3s ease;
+    }
+
+    .navbar a:hover::after {
+      width: 100%;
+    }
+
+    .logo {
+      height: 50px;
+      filter: drop-shadow(0 0 8px rgba(108, 111, 112, 0.66));
+      transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-btn {
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .login-btn {
+      background: transparent;
+      border: 2px solid var(--secondary);
+      color: var(--secondary);
+    }
+
+    .login-btn:hover {
+      background: rgba(76, 201, 240, 0.15);
+    }
+
+    .register-btn {
+      background: var(--gradient);
+      color: white;
+      border: none;
+    }
+
+    .register-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      padding: 100px 20px 150px;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo1 {
+      height: 300px;
+      margin-top: 0px;
+      filter: drop-shadow(0 0 20px rgba(76, 201, 240, 0.6));
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+      color: white;
+      text-shadow: 0 0 15px rgba(76, 202, 240, 0.71);
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .hero p {
+      font-size: 1.4rem;
+      margin-bottom: 40px;
+      color: #cbd5e1;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInUp 1s ease-out 0.2s;
+      animation-fill-mode: both;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+      animation: fadeInUp 1s ease-out 0.4s;
+      animation-fill-mode: both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+      color: #fff;
+      padding: 15px 30px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+      position: relative;
+      overflow: hidden;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(67, 97, 238, 0.6);
+    }
+
+    .btn i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Tech tags */
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 40px;
+      animation: fadeInUp 1s ease-out 0.6s;
+      animation-fill-mode: both;
+    }
+
+    .tech-tags span {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 1rem;
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(6px);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tech-tags span:hover {
+      transform: translateY(-3px);
+      background: rgba(67, 97, 238, 0.3);
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    /* Stats Section */
+    .stats {
+      background: white;
+      padding: 80px 20px;
+      position: relative;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .stat-box {
+      text-align: center;
+      flex: 1;
+      min-width: 200px;
+      padding: 30px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transition: all 0.4s ease;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(67, 97, 238, 0.15);
+    }
+
+    .stat-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .stat-title {
+      font-size: 1.1rem;
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    /* About & Features */
+    .about {
+      max-width: 900px;
+      margin: 80px auto;
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+    }
+
+    .about h2 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 25px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .about h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--gradient);
+      border-radius: 2px;
+    }
+
+    .about p {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #4b5563;
+      max-width: 700px;
+      margin: 0 auto 50px;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin: 40px auto 80px;
+      max-width: 1200px;
+      padding: 0 20px;
+    }
+
+    .feature-box {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      padding: 35px 30px;
+      text-align: center;
+      flex: 1;
+      min-width: 280px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      border: none;
+    }
+
+    .feature-box:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(67, 97, 238, 0.15);
+    }
+
+    .feature-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .feature-box h3 {
+      color: var(--primary-dark);
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    .feature-box p {
+      font-size: 1.05rem;
+      color: #4b5563;
+      line-height: 1.7;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      padding: 100px 20px;
+      text-align: center;
+    }
+
+    .testimonials h2 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 60px;
+    }
+
+    .testimonial-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .testimonial-card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      flex: 1;
+      min-width: 300px;
+      max-width: 380px;
+      text-align: left;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(67, 97, 238, 0.15);
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 5rem;
+      color: var(--secondary);
+      opacity: 0.1;
+      font-family: serif;
+      line-height: 1;
+    }
+
+    .testimonial-content {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #4b5563;
+      margin-bottom: 25px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .author-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .author-info h4 {
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+      margin-bottom: 5px;
+    }
+
+    .author-info p {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    /* CTA Section */
+    .cta {
+      background: var(--gradient);
+      padding: 100px 20px;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+
+    .cta h2 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .cta p {
+      font-size: 1.3rem;
+      max-width: 700px;
+      margin: 0 auto 40px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .cta .btn {
+      background: white;
+      color: var(--primary);
+      font-size: 1.2rem;
+      padding: 18px 45px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta .btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Footer */
+    .footer {
+      background: #0f172a;
+      color: #cbd5e1;
+      padding: 80px 20px 40px;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 50px;
+    }
+
+    .footer-col {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .footer-col h3 {
+      color: white;
+      font-size: 1.4rem;
+      margin-bottom: 25px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--gradient);
+    }
+
+    .footer-logo {
+      height: 70px;
+      margin-bottom: 20px;
+      filter: brightness(0) invert(1);
+    }
+
+    .footer-col p {
+      margin-bottom: 25px;
+      line-height: 1.7;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .social-links a:hover {
+      background: var(--gradient);
+      transform: translateY(-5px);
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 15px;
+    }
+
+    .footer-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-links a:hover {
+      color: var(--secondary);
+      transform: translateX(5px);
+    }
+
+    .footer-links i {
+      color: var(--secondary);
+      width: 20px;
+    }
+
+    .copyright {
+      text-align: center;
+      padding-top: 50px;
+      margin-top: 50px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Scroll down indicator */
+    .scroll-down {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.7);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) translateX(-50%);
+      }
+      40% {
+        transform: translateY(-20px) translateX(-50%);
+      }
+      60% {
+        transform: translateY(-10px) translateX(-50%);
+      }
+    }
+
+    .scroll-down i {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero p {
+        font-size: 1.1rem;
+      }
+      
+      .button-group {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .navbar .nav-buttons {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Particles background -->
+  <div id="particles-js"></div>
+  
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <img src="{% static 'images/gryphon_logo1.png' %}" alt="Gryphon Academy Logo" class="logo">
+    
+    <div>
+      <a href="#hero-content" class="active">Home</a>
+      <a href="#features">Features</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#about">About</a>
+    </div>
+    <div class="nav-buttons">
+      <a href="{% url 'login'%}" class="nav-btn login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+      <a href="{% url 'register'%}" class="nav-btn register-btn">Register Now</a>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id = "hero-content">
+    <div class="hero-content">
+      <video class="logo1" autoplay muted playsinline>
+  <source src="{% static 'images/logo3.webm' %}" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
+      <h1>Master Coding with Gryphon Academy</h1>
+      
+      <p>Elevate your skills through elite DSA contests, coding challenges, and personalized learning pathways</p>
+      <div class="button-group">
+        <a href="{% url 'register'%}" class="btn"><i class="fas fa-rocket"></i> Get Started</a>
+        <a href="{% url 'login'%}" class="btn btn-secondary"><i class="fas fa-graduation-cap"></i> Student Login</a>
+      </div>
+      <div class="tech-tags">
+        <span><i class="fas fa-brain"></i> AI/ML</span>
+        <span><i class="fas fa-chart-line"></i> DSA</span>
+        <span><i class="fas fa-globe"></i> Web Dev</span>
+        <span><i class="fas fa-robot"></i> Deep Learning</span>
+        <span><i class="fas fa-server"></i> Backend</span>
+        <span><i class="fas fa-code"></i> Competitive Programming</span>
+        <span><i class="fas fa-mobile-alt"></i> App Dev</span>
+        <span><i class="fas fa-puzzle-piece"></i> Puzzles</span>
+      </div>
+    </div>
+    
+    <div class="scroll-down">
+      <i class="fas fa-chevron-down"></i>
+      <span>Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- STATS SECTION -->
+  <section class="stats">
+    <div class="stats-container">
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-value" id="studentCount">0</div>
+        <div class="stat-title">Active Students</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fas fa-code"></i></div>
+        <div class="stat-value" id="problemCount">0</div>
+        <div class="stat-title">Coding Problems</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+        <div class="stat-value" id="contestCount">0</div>
+        <div class="stat-title">Contests Hosted</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+        <div class="stat-value">24/7</div>
+        <div class="stat-title"  id="about">Active Learning</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <h2>Why Gryphon Academy?</h2>
+    <p>We're revolutionizing coding education through performance tracking, curated problem sets, and elegant progress visualizations. Gryphon Academy provides a competitive ecosystem where you can track your growth, compete with peers, and master the skills that tech companies demand.</p>
+    <div class="features" id="features">
+      <div class="feature-box">
+        <div class="feature-icon"><i class="fas fa-chart-network"></i></div>
+        <h3>Progress Tracking</h3>
+        <p>Visualize your growth topic-wise with dynamic charts, water-fill effects, and personalized analytics dashboards.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon"><i class="fas fa-id-card"></i></div>
+        <h3>Developer Profile</h3>
+        <p>Showcase GitHub, LeetCode, Codeforces, and more on your unified developer profile visible to recruiters.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
+        <h3>CV Hosting</h3>
+        <p>Securely upload and update your resume, making it instantly available to our recruitment partners.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon"><i class="fas fa-chess-king"></i></div>
+        <h3>Elite Challenges</h3>
+        <p>Compete in algorithm contests, climb leaderboards, and earn recognition for your DSA mastery.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials" id="testimonials">
+    <h2>What Our Students Say</h2>
+    <div class="testimonial-container">
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          "Gryphon Academy transformed my approach to coding interviews. The progress tracking showed me exactly where to focus, and within 3 months I landed offers from two FAANG companies!"
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">R</div>
+          <div class="author-info">
+            <h4>Rajesh Kumar</h4>
+            <p>SDE at Amazon</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          "The competitive environment pushed me to solve harder problems than I ever would have on my own. I went from beginner to contest finalist in just 6 months!"
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">P</div>
+          <div class="author-info">
+            <h4>Priya Sharma</h4>
+            <p>Codeforces Expert</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          "As a self-taught developer, Gryphon gave me the structure I needed. The visual progress tracking kept me motivated through the challenging DSA concepts."
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">A</div>
+          <div class="author-info">
+            <h4>Ananya Patel</h4>
+            <p>Full Stack Developer</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="cta">
+    <h2>Start Your Coding Journey Today</h2>
+    <p>Join thousands of developers who have transformed their skills with Gryphon Academy.</p>
+    <a href="{%url 'register'%}" class="btn"><i class="fas fa-gem"></i> Get Started</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <img src="{% static 'images/gryphon_logo1.png' %}" alt="Gryphon Academy" class="footer-logo">
+        <p>Creating Industry-Ready Force, Enhancing Fresher's Employability
+With our Customized Industry Readiness Programme</p>
+        <div class="social-links">
+          <a href="https://www.facebook.com/gryphonnacademy" style="text-decoration:none;"><i class="fab fa-facebook"></i></a>
+          <a href="https://www.linkedin.com/company/gryphonacademy/" style="text-decoration:none;"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://www.instagram.com/gryphon_academy/" style="text-decoration:none;"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/channel/UCVn2uVWEHg8cMFd8ht3CQBw" style="text-decoration:none;"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="#hero-content"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="#features"><i class="fas fa-chevron-right"></i> Features</a></li>
+          <li><a href="#testimonials"><i class="fas fa-chevron-right"></i> Testimonials</a></li>
+          <li><a href="#about"><i class="fas fa-chevron-right"></i> About US</a></li>
+        </ul>
+      </div>
+      
+      
+      <div class="footer-col">
+        <h3>Contact Us</h3>
+        <ul class="footer-links">
+          <li><a href="https://outlook.office.com/mail/deeplink/compose?mailtouri=mailto%3Aconnect%40gryphonacademy.co.in"><i class="fas fa-envelope"></i> connect@gryphonacademy.co.in</a></li>
+          <li><a href="#"><i class="fas fa-phone-alt"></i> +91 89836 14509</a></li>
+          <li><a href="https://www.google.com/maps/place/Gryphon+Academy+Pvt.+Ltd/@18.5535706,73.7683189,17z/data=!3m1!4b1!4m6!3m5!1s0xab4cb7fb73c5c4ff:0x14e62cad775d447b!8m2!3d18.5535706!4d73.7708938!16s%2Fg%2F11rvhnxgly?entry=tts&g_ep=EgoyMDI0MDkwMy4wKgBIAVAD"><i class="fas fa-map-marker-alt"></i> 9th Floor, Olympia Business House, Mumbai - Bangalore Highway, Pune - 411045</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      Copyright &copy; 2025 Gryphon Academy Pvt. Ltd.
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    // Initialize particles background
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: "#4cc9f0" },
+        shape: { type: "circle", stroke: { width: 0, color: "#000000" } },
+        opacity: { value: 0.5, random: true },
+        size: { value: 3, random: true },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: "#4cc9f0",
+          opacity: 0.3,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 2,
+          direction: "none",
+          random: true,
+          straight: false,
+          out_mode: "out",
+          bounce: false
+        }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: { enable: true, mode: "grab" },
+          onclick: { enable: true, mode: "push" },
+          resize: true
+        },
+        modes: {
+          grab: { distance: 140, line_linked: { opacity: 1 } },
+          push: { particles_nb: 4 }
+        }
+      },
+      retina_detect: true
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Counter animation for stats
+    function animateValue(id, start, end, duration) {
+      let obj = document.getElementById(id);
+      let range = end - start;
+      let current = start;
+      let increment = end > start ? 1 : -1;
+      let stepTime = Math.abs(Math.floor(duration / range));
+      let timer = setInterval(function() {
+        current += increment;
+        obj.innerHTML = current;
+        if (current == end) {
+          clearInterval(timer);
+        }
+      }, stepTime);
+    }
+
+    // Initialize counters when section is in view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateValue("studentCount", 0, 12500, 2000);
+          animateValue("problemCount", 0, 8500, 2000);
+          animateValue("contestCount", 0, 320, 2000);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    observer.observe(document.querySelector('.stats'));
+
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body>
+</html>

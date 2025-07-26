@@ -1,0 +1,808 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Gryphon Academy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --admin-primary: #d32f2f;
+      --admin-secondary: #b71c1c;
+      --admin-accent: #f44336;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --sidebar-bg: rgba(25, 35, 65, 0.95);
+      --dashboard-gradient: linear-gradient(135deg, #1d3557 0%, #2a4a6e 100%);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--dashboard-gradient);
+      color: var(--light);
+      overflow-x: hidden;
+    }
+    
+    /* Particles background */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 10px rgba(67, 97, 238, 0.2);
+    }
+    
+    /* Sidebar styling */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(10px);
+      padding: 25px 0;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+    
+    .logo-container {
+      padding: 0 25px 25px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 25px;
+    }
+    
+    .logo {
+      height: 60px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+    
+    .nav-title {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 0 25px;
+      margin: 25px 0 15px;
+    }
+    
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 14px 25px;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background: rgba(211, 47, 47, 0.2);
+      color: white;
+    }
+    
+    .nav-link.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: var(--admin-primary);
+    }
+    
+    .nav-link i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+      width: 24px;
+      text-align: center;
+    }
+    
+    .nav-link .badge {
+      margin-left: auto;
+      background: var(--admin-accent);
+      color: white;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+    
+    /* Main content area */
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 40px;
+    }
+    
+    /* Topbar styling */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+    
+    .search-bar input {
+      width: 100%;
+      padding: 12px 20px 12px 45px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      color: white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .search-bar input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.3);
+    }
+    
+    .search-bar i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .user-info {
+      text-align: right;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .user-role {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(to right, var(--admin-primary), var(--admin-accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+    
+    /* Dashboard Header */
+    .dashboard-header {
+      padding: 30px 40px 20px;
+      position: relative;
+    }
+    
+    .welcome-container h1 {
+      font-size: 2.3rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .welcome-container h1 span {
+      background: var(--admin-primary);
+      color: white;
+      font-size: 1rem;
+      padding: 5px 15px;
+      border-radius: 20px;
+    }
+    
+    .dashboard-stats {
+      display: flex;
+      gap: 20px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+    
+    .stat-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px;
+      min-width: 200px;
+      flex-grow: 1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+    
+    .stat-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      background: rgba(211, 47, 47, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: var(--admin-accent);
+    }
+    
+    .stat-title {
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    
+    .stat-trend {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      color: #4ade80;
+    }
+    
+    .stat-trend.down {
+      color: #f87171;
+    }
+    
+    /* Dashboard Content */
+    .dashboard-content {
+      padding: 0 30px;
+      margin-top: 20px;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      position: relative;
+      padding-left: 15px;
+    }
+    
+    .section-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 5px;
+      height: 70%;
+      width: 4px;
+      background: var(--admin-primary);
+      border-radius: 2px;
+    }
+    
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right, var(--admin-primary), var(--admin-accent));
+    }
+    
+    .card-icon {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      color: var(--admin-primary);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover .card-icon {
+      transform: scale(1.1);
+    }
+    
+    .card h2 {
+      font-size: 1.5rem;
+      color: var(--admin-primary);
+      margin-bottom: 15px;
+    }
+    
+    .card p {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+    
+    .btn-card {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 20px;
+      background: linear-gradient(to right, var(--admin-primary), var(--admin-secondary));
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      gap: 8px;
+    }
+    
+    .btn-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(211, 47, 47, 0.4);
+    }
+    
+    /* Footer */
+    .footer {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 15px 30px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.85rem;
+      margin-top: auto;
+    }
+    
+    .footer a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .footer a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 80px;
+      }
+      
+      .sidebar .logo-text,
+      .sidebar .nav-title,
+      .sidebar .nav-link span,
+      .sidebar .badge {
+        display: none;
+      }
+      
+      .sidebar .nav-link {
+        justify-content: center;
+        padding: 18px;
+      }
+      
+      .sidebar .nav-link i {
+        margin-right: 0;
+        font-size: 1.4rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        padding: 15px;
+      }
+      
+      .logo-container {
+        padding: 0 0 15px;
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      
+      .nav-links {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 10px;
+      }
+      
+      .nav-link {
+        flex-direction: column;
+        padding: 10px 15px;
+        text-align: center;
+        font-size: 0.85rem;
+        min-width: 70px;
+      }
+      
+      .nav-link i {
+        margin-right: 0;
+        margin-bottom: 5px;
+        font-size: 1.3rem;
+      }
+      
+      .nav-title {
+        display: none;
+      }
+      
+      .topbar {
+        flex-direction: column;
+        gap: 20px;
+        padding: 15px;
+      }
+      
+      .search-bar {
+        width: 100%;
+      }
+      
+      .user-area {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .dashboard-stats {
+        flex-direction: column;
+      }
+      
+      .stat-card {
+        min-width: 100%;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .dashboard-header {
+        padding: 20px 15px;
+      }
+      
+      .welcome-container h1 {
+        font-size: 1.8rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .dashboard-content {
+        padding: 0 15px;
+      }
+      
+      .section-title {
+        font-size: 1.3rem;
+      }
+      
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated particles background -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <div class="logo-container">
+      <img src="{% static 'images/gryphon_logo1.png' %}" alt="Gryphon Academy Logo" class="logo">
+    </div>
+    
+    <div class="nav-title">Main Navigation</div>
+    <div class="nav-links">
+      <a href="#" class="nav-link active">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="{% url 'view_questions' %}" class="nav-link">
+        <i class="fas fa-tasks"></i>
+        <span>Manage Questions</span>
+      </a>
+      <a href="{% url 'add_contest' %}" class="nav-link">
+        <i class="fas fa-folder-plus"></i>
+        <span>Add Topic</span>
+      </a>
+      <a href="{% url 'view_contests' %}" class="nav-link">
+        <i class="fas fa-folder-open"></i>
+        <span>All Topics</span>
+      </a>
+      <a href="{% url 'add_question' %}" class="nav-link">
+        <i class="fas fa-plus-circle"></i>
+        <span>Add Question</span>
+      </a>
+      <a href="{% url 'admin_leaderboard' %}" class="nav-link">
+        <i class="fas fa-trophy"></i>
+        <span>Leaderboard</span>
+        <span class="badge">New</span>
+      </a>
+      <a href="#" class="nav-link">
+        <i class="fas fa-users"></i>
+        <span>User Management</span>
+      </a>
+      <a href="#" class="nav-link">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </a>
+    </div>
+    
+    <div class="nav-link" style="margin-top: auto;">
+      <a href="{% url 'admin_logout' %}" onclick="return confirm('Are you sure you want to logout?');" style="color: inherit; text-decoration: none; display: flex; align-items: center; width: 100%;">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search...">
+      </div>
+      
+      <div class="user-area">
+        <div class="user-info">
+          <div class="user-name">{{ request.user.username }}</div>
+          <div class="user-role">Administrator</div>
+        </div>
+        <div class="user-avatar">
+          <i class="fas fa-user-shield"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <div class="welcome-container">
+        <h1>Admin Dashboard <span>Gryphon Academy</span></h1>
+        <p>"Lead with clarity, manage with confidence."</p>
+        
+        <div class="dashboard-stats">
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <div class="stat-title">Total Questions</div>
+            </div>
+            <div class="stat-value">142</div>
+            <div class="stat-trend">
+              <i class="fas fa-arrow-up"></i> 12% from last month
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-title">Active Students</div>
+            </div>
+            <div class="stat-value">327</div>
+            <div class="stat-trend">
+              <i class="fas fa-arrow-up"></i> 8% from last week
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon">
+                <i class="fas fa-trophy"></i>
+              </div>
+              <div class="stat-title">Topics</div>
+            </div>
+            <div class="stat-value">24</div>
+            <div class="stat-trend down">
+              <i class="fas fa-arrow-down"></i> 2 need attention
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+      <div class="section-header">
+        <h2 class="section-title">Quick Actions</h2>
+      </div>
+      
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-tasks"></i></div>
+          <h2>Manage Questions</h2>
+          <p>View, edit, or delete coding questions across all topics and difficulty levels.</p>
+          <a href="{% url 'view_questions' %}" class="btn-card">
+            <i class="fas fa-list"></i> View Questions
+          </a>
+        </div>
+        
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-folder-plus"></i></div>
+          <h2>Add Topic</h2>
+          <p>Create new topics and categories to organize coding challenges.</p>
+          <a href="{% url 'add_contest' %}" class="btn-card">
+            <i class="fas fa-plus-circle"></i> Add Topic
+          </a>
+        </div>
+        
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-folder-open"></i></div>
+          <h2>All Topics</h2>
+          <p>Review, organize, and manage existing topics and their content.</p>
+          <a href="{% url 'view_contests' %}" class="btn-card">
+            <i class="fas fa-cog"></i> Manage Topics
+          </a>
+        </div>
+        
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-plus-circle"></i></div>
+          <h2>Add Question</h2>
+          <p>Create new coding challenges with multiple test cases and solutions.</p>
+          <a href="{% url 'add_question' %}" class="btn-card">
+            <i class="fas fa-edit"></i> Add Question
+          </a>
+        </div>
+        
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-trophy"></i></div>
+          <h2>Leaderboard</h2>
+          <p>Monitor student rankings and performance across all topics.</p>
+          <a href="{% url 'admin_leaderboard' %}" class="btn-card">
+            <i class="fas fa-chart-bar"></i> View Leaderboard
+          </a>
+        </div>
+        
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-users"></i></div>
+          <h2>Manage Users</h2>
+          <p>View and manage all student accounts and their progress.</p>
+          <a href="#" class="btn-card">
+            <i class="fas fa-user-cog"></i> User Management
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <p>&copy; 2023 Gryphon Academy. All rights reserved.</p>
+      <div>
+        <a href="#">Privacy Policy</a> | 
+        <a href="#">Terms of Service</a> | 
+        <a href="#">Contact Us</a>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Create animated particles background
+    document.addEventListener('DOMContentLoaded', function() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 40;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random size between 3px and 8px
+        const size = Math.random() * 5 + 3;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        
+        // Random animation
+        const duration = Math.random() * 20 + 10;
+        particle.style.animation = `float ${duration}s infinite ease-in-out`;
+        
+        // Create keyframes for floating animation
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(90deg); }
+            50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(180deg); }
+            75% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+          }
+        `;
+        
+        document.head.appendChild(style);
+        particlesContainer.appendChild(particle);
+      }
+      
+      // Set active nav link
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll('.nav-link');
+      
+      navLinks.forEach(link => {
+        if (link.href.includes(currentPath)) {
+          link.classList.add('active');
+        }
+        
+        link.addEventListener('click', function() {
+          navLinks.forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ contest.title }} - Manage Topic | Gryphon Academy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --dashboard-gradient: linear-gradient(135deg, #1d3557 0%, #457b9d 100%);
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--dashboard-gradient);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* Particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(67, 97, 238, 0.3);
+        }
+        
+        /* Header styling */
+        .navbar {
+            background: transparent;
+            backdrop-filter: blur(10px);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: var(--glass-border);
+        }
+        
+        .logo {
+            height: 50px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            position: relative;
+            padding: 6px 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-links a:hover {
+            color: #e0f0ff;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .btn-nav {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-nav:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        /* Main content */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto 40px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .contest-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 15px;
+        }
+        
+        .contest-title {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Table container */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            border: var(--glass-border);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+        
+        .table-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+        
+        .table-header {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 15px;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        .table-header::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -5px;
+            height: 4px;
+            width: 60px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background: transparent;
+        }
+        
+        th {
+            background-color: rgba(67, 97, 238, 0.08);
+            color: var(--primary);
+            font-size: 1rem;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            color: #555;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+        
+        tr:hover {
+            background-color: rgba(67, 97, 238, 0.08);
+        }
+        
+        .question-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .question-link:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+        
+        /* Difficulty badges */
+        .difficulty {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            text-align: center;
+            min-width: 80px;
+        }
+        
+        .easy { background: rgba(76, 175, 80, 0.15); color: var(--success); }
+        .medium { background: rgba(255, 152, 0, 0.15); color: var(--warning); }
+        .hard { background: rgba(244, 67, 54, 0.15); color: var(--danger); }
+        
+        /* Button styling */
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-remove {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .btn-remove:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn-add {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .btn-delete {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .btn-add:hover, .btn-delete:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        /* Action buttons container */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .action-buttons .btn {
+            min-width: 220px;
+            padding: 12px 24px;
+            font-size: 1.05rem;
+        }
+        
+        /* No data message */
+        .no-data {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(5px);
+            border: var(--glass-border);
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .footer a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        
+        /* Responsive design */
+        @media (min-width: 768px) {
+            .contest-title {
+                font-size: 2.5rem;
+            }
+            
+            .table-header {
+                text-align: left;
+                font-size: 1.7rem;
+            }
+            
+            .table-header::before {
+                left: 0;
+                transform: none;
+            }
+            
+            .nav-links a {
+                font-size: 1.1rem;
+            }
+            
+            .btn-nav {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .contest-title {
+                font-size: 2.8rem;
+            }
+            
+            .table-container {
+                padding: 30px;
+            }
+            
+            .table-header {
+                font-size: 1.8rem;
+            }
+            
+            .logo {
+                height: 62px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .contest-title {
+                font-size: 1.8rem;
+            }
+            
+            .difficulty {
+                min-width: 70px;
+                padding: 5px 10px;
+            }
+            
+            .footer {
+                padding: 10px;
+            }
+            
+            .footer a {
+                display: block;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated particles background -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <img src="{% static 'images/gryphon_logo1.png' %}" alt="Gryphon Academy Logo" class="logo">
+        
+        <div class="nav-links">
+            <a href="{% url 'admin_dashboard' %}" class="btn-nav">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="{% url 'view_contests' %}" class="btn-nav">
+                <i class="fas fa-book"></i> Topics
+            </a>
+            <a href="{% url 'admin_logout' %}" onclick="return confirm('Are you sure you want to logout?');" class="btn-nav">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Contest Header -->
+        <div class="contest-header">
+            <h1 class="contest-title">{{ contest.title }}</h1>
+        </div>
+        
+        <!-- Questions Table -->
+        <div class="table-container">
+            <h3 class="table-header">Topic Questions</h3>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Level</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cq in contest_questions %}
+                        <tr>
+                            <td>
+                                <a href="{{ cq.question.link }}" target="_blank" class="question-link">
+                                    <i class="fas fa-link"></i> {{ cq.question.name }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if cq.question.level == 'Easy' %}
+                                    <span class="difficulty easy">Easy</span>
+                                {% elif cq.question.level == 'Medium' %}
+                                    <span class="difficulty medium">Medium</span>
+                                {% elif cq.question.level == 'Hard' %}
+                                    <span class="difficulty hard">Hard</span>
+                                {% else %}
+                                    <span class="difficulty">Unknown</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'remove_question_from_contest' contest.id cq.id %}"
+                                   class="btn btn-remove"
+                                   onclick="return confirm('Remove this question from the topic?');">
+                                    <i class="fas fa-trash-alt"></i> Remove
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="no-data">
+                                <i class="fas fa-book-open"></i> No questions found in this topic.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="{% url 'add_questions_to_contest' contest.id %}" class="btn btn-add">
+                <i class="fas fa-plus-circle"></i> Add Questions
+            </a>
+            <a href="{% url 'delete_contest' contest.id %}" class="btn btn-delete" 
+               onclick="return confirm('Are you sure you want to delete this topic and all its data?');">
+                <i class="fas fa-trash"></i> Delete Topic
+            </a>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2023 Gryphon Academy. All rights reserved.</p>
+        <div>
+            <a href="#">Privacy Policy</a> | 
+            <a href="#">Terms of Service</a> | 
+            <a href="#">Contact Us</a>
+        </div>
+    </div>
+    
+    <script>
+        // Create animated particles background
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 3px and 8px
+                const size = Math.random() * 5 + 3;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation
+                const duration = Math.random() * 20 + 10;
+                particle.style.animation = `float ${duration}s infinite ease-in-out`;
+                
+                // Create keyframes for floating animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes float {
+                        0% { transform: translate(0, 0); }
+                        25% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px); }
+                        50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px); }
+                        75% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px); }
+                        100% { transform: translate(0, 0); }
+                    }
+                `;
+                
+                document.head.appendChild(style);
+                particlesContainer.appendChild(particle);
+            }
+        });
+    </script>
+</body>
+</html>

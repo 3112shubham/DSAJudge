@@ -1,0 +1,1069 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ contest.title }} - Gryphon Academy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --dashboard-gradient: linear-gradient(135deg, #1d3557 0%, #457b9d 100%);
+            --progress-gradient: linear-gradient(to right, #4361ee, #4895ef);
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--dashboard-gradient);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* Particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(67, 97, 238, 0.3);
+        }
+        
+        /* Header styling */
+        .navbar {
+            background: transparent;
+            backdrop-filter: blur(10px);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            height: 50px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            position: relative;
+            padding: 6px 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-links a:hover {
+            color: #e0f0ff;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .btn-nav {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-nav:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        /* Main content */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto 40px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .contest-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 15px;
+        }
+        
+        .contest-title {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .contest-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        /* Progress section */
+        .progress-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .progress-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+        
+        .progress-header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .progress-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        .score-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .score-label {
+            font-size: 1.1rem;
+            color: #555;
+        }
+        
+        .score-value {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--progress-gradient);
+            border-radius: 10px;
+            position: relative;
+            transition: width 0.8s ease-in-out;
+            width: 0%;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-value {
+            font-size: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        /* Filters section */
+        .filters-section {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto 25px;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .dropbtn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+        
+        .dropbtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .dropdown-content {
+          display: none;
+            position: absolute;
+            right: 0;
+            background: var(--card-bg);
+            min-width: 220px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            z-index: 99;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+        }
+        .dropdown-content.show {
+            display: block;
+        }
+        
+        .dropdown-content label {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: #555;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .dropdown-content label:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+        
+        .dropdown-content input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        /* Questions table */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+        
+        .table-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+        
+        .table-header {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 15px;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        .table-header::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -5px;
+            height: 4px;
+            width: 60px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background: transparent;
+        }
+        
+        th {
+            background-color: rgba(67, 97, 238, 0.08);
+            color: var(--primary);
+            font-size: 1rem;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            color: #555;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+        
+        tr:hover {
+            background-color: rgba(67, 97, 238, 0.08);
+        }
+        
+        .question-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .question-link:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+        
+        /* Difficulty badges */
+        .difficulty {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            text-align: center;
+            min-width: 80px;
+        }
+        
+        .easy { background: rgba(76, 175, 80, 0.15); color: var(--success); }
+        .medium { background: rgba(255, 152, 0, 0.15); color: var(--warning); }
+        .hard { background: rgba(244, 67, 54, 0.15); color: var(--danger); }
+        
+        /* Testcases input */
+        .testcase-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .testcase-inputs input {
+            background-color: rgba(67, 97, 238, 0.08);
+            border: 1px solid rgba(67, 97, 238, 0.2);
+            color: #555;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 0.95rem;
+            width: 60px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .testcase-inputs input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+        
+        /* Checkbox styling */
+        .question-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            border: 2px solid var(--primary);
+            appearance: none;
+            cursor: pointer;
+            position: relative;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .question-checkbox:checked {
+            background: var(--primary);
+        }
+        
+        .question-checkbox:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+        }
+        
+        /* No data message */
+        .no-data {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 30px;
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .footer a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        
+        /* Responsive design */
+        @media (min-width: 768px) {
+            .contest-title {
+                font-size: 2.5rem;
+            }
+            
+            .contest-description {
+                font-size: 1.2rem;
+            }
+            
+            .progress-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .progress-title {
+                text-align: left;
+            }
+            
+            .score-container {
+                justify-content: flex-end;
+            }
+            
+            .progress-container {
+                flex-direction: row;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .progress-value {
+                min-width: 70px;
+                text-align: left;
+            }
+            
+            .table-header {
+                text-align: left;
+                font-size: 1.7rem;
+            }
+            
+            .table-header::before {
+                left: 0;
+                transform: none;
+            }
+            
+            .dropdown {
+                width: auto;
+            }
+            
+            .nav-links a {
+                font-size: 1.1rem;
+            }
+            
+            .btn-nav {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .contest-title {
+                font-size: 2.8rem;
+            }
+            
+            .contest-description {
+                font-size: 1.3rem;
+            }
+            
+            .progress-section {
+                padding: 30px;
+            }
+            
+            .table-container {
+                padding: 30px;
+            }
+            
+            .table-header {
+                font-size: 1.8rem;
+            }
+            
+            .logo {
+                height: 62px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .contest-title {
+                font-size: 1.8rem;
+            }
+            
+            .contest-description {
+                font-size: 1rem;
+            }
+            
+            .difficulty {
+                min-width: 70px;
+                padding: 5px 10px;
+            }
+            
+            .testcase-inputs input {
+                width: 50px;
+                padding: 6px;
+            }
+            
+            .filters-section {
+                gap: 10px;
+            }
+            
+            .dropbtn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .footer {
+                padding: 10px;
+            }
+            
+            .footer a {
+                display: block;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated particles background -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <img src="{% static 'images/gryphon_logo1.png' %}" alt="Gryphon Academy Logo" class="logo">
+        
+        <div class="nav-links">
+            <a href="{% url 'dashboard' %}" class="btn-nav">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="{% url 'student_contests' %}" class="btn-nav">
+                <i class="fas fa-book"></i> Topics
+            </a>
+            <a href="{% url 'logout' %}" onclick="return confirm('Are you sure you want to logout?');" class="btn-nav">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Contest Header -->
+        <div class="contest-header">
+            <h1 class="contest-title">{{ contest.title }}</h1>
+            <p class="contest-description">{{ contest.description }}</p>
+        </div>
+        
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h3 class="progress-title">Your Progress</h3>
+                <div class="score-container">
+                    <div class="score-label">Score:</div>
+                    <div class="score-value" id="totalScore">0</div>
+                    <div class="score-label">/ {{ total_score }}</div>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-value" id="progressPercent">0%</div>
+            </div>
+        </div>
+        
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <!-- Difficulty Filter -->
+            <div class="dropdown">
+              <button class="dropbtn" onclick="toggleDropdown('difficultyDropdown')">
+                <span><i class="fas fa-bullseye"></i> Difficulty</span>
+                <i class="fas fa-caret-down"></i>
+              </button>
+              <div class="dropdown-content" id="difficultyDropdown">
+                <label><input type="checkbox" value="All" class="levelCheck" checked> All Levels</label>
+                    <label><input type="checkbox" value="Easy" class="levelCheck"> Easy</label>
+                    <label><input type="checkbox" value="Medium" class="levelCheck"> Medium</label>
+                    <label><input type="checkbox" value="Hard" class="levelCheck"> Hard</label>
+              </div>
+            </div>
+
+            <!-- Attempt Filter -->
+            <div class="dropdown">
+                <button onclick="toggleDropdown('attemptDropdown')" class="dropbtn">
+                    <span><i class="fas fa-tasks"></i> Attempt Status</span>
+                    <i class="fas fa-caret-down"></i>
+                </button>
+                <div id="attemptDropdown" class="dropdown-content">
+                    <label><input type="checkbox" value="All" class="attemptCheck" checked> All Attempts</label>
+                    <label><input type="checkbox" value="Unattempted" class="attemptCheck"> Unattempted</label>
+                    <label><input type="checkbox" value="Incomplete" class="attemptCheck"> Incomplete</label>
+                    <label><input type="checkbox" value="Completed" class="attemptCheck"> Completed</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Questions Table -->
+        <div class="table-container">
+            <h3 class="table-header">Contest Questions</h3>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">Select</th>
+                            <th style="min-width: 180px;">Question</th>
+                            <th style="min-width: 110px;">Level</th>
+                            <th style="min-width: 150px;">Testcases (Passed / Total)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cq in contest_questions %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="question-checkbox" data-id="{{ cq.id }}" data-score="{{ cq.score }}">
+                            </td>
+                            <td>
+                                <a href="{{ cq.question.link }}" target="_blank" class="question-link">
+                                    <i class="fas fa-link"></i> {{ cq.question.name }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if cq.question.level == 'Easy' %}
+                                    <span class="difficulty easy">Easy</span>
+                                {% elif cq.question.level == 'Medium' %}
+                                    <span class="difficulty medium">Medium</span>
+                                {% elif cq.question.level == 'Hard' %}
+                                    <span class="difficulty hard">Hard</span>
+                                {% else %}
+                                    <span class="difficulty">Unknown</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="testcase-inputs">
+                                    <input type="number" class="passed" data-id="{{ cq.id }}" value="0" min="0">
+                                    <span>/</span>
+                                    <input type="number" class="total" data-id="{{ cq.id }}" value="0" min="0">
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="no-data">
+                                <i class="fas fa-book-open"></i> No questions found in this contest.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2023 Gryphon Academy. All rights reserved.</p>
+        <div>
+            <a href="#">Privacy Policy</a> | 
+            <a href="#">Terms of Service</a> | 
+            <a href="#">Contact Us</a>
+        </div>
+    </div>
+    
+    <script>
+        // Dropdown functionality
+        function toggleDropdown(id) {
+          document.querySelectorAll(".dropdown-content").forEach(menu => {
+              if (menu.id !== id) menu.classList.remove("show");
+          });
+          const target = document.getElementById(id);
+          if (target) {
+              target.classList.toggle("show");
+          }
+      }
+
+      // Close all dropdowns when clicking outside
+      window.addEventListener("click", function (e) {
+          if (!e.target.closest(".dropdown")) {
+              document.querySelectorAll(".dropdown-content").forEach(menu => {
+                  menu.classList.remove("show");
+              });
+          }
+      });
+        // Create animated particles background
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 3px and 8px
+                const size = Math.random() * 5 + 3;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation
+                const duration = Math.random() * 20 + 10;
+                particle.style.animation = `float ${duration}s infinite ease-in-out`;
+                
+                // Create keyframes for floating animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes float {
+                        0% { transform: translate(0, 0); }
+                        25% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px); }
+                        50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px); }
+                        75% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px); }
+                        100% { transform: translate(0, 0); }
+                    }
+                `;
+                
+                document.head.appendChild(style);
+                particlesContainer.appendChild(particle);
+            }
+            
+            // Initialize with participation data
+            const participationData = {{ participation_data|safe }};
+            let questionScores = {};
+            let totalScore = 0;
+            
+            // Populate fields from saved data
+            for (const id in participationData) {
+                const data = participationData[id];
+                const passedInput = document.querySelector(`.passed[data-id='${id}']`);
+                const totalInput = document.querySelector(`.total[data-id='${id}']`);
+                const checkbox = document.querySelector(`.question-checkbox[data-id='${id}']`);
+                
+                if (passedInput) passedInput.value = data.passed;
+                if (totalInput) totalInput.value = data.total;
+                
+                if (checkbox && data.is_selected) {
+                    checkbox.checked = true;
+                    const score = parseFloat(checkbox.dataset.score);
+                    const questionScore = (data.total > 0) ? ((data.passed / data.total) * score) : 0;
+                    questionScores[id] = questionScore;
+                }
+            }
+            
+            for (const id in questionScores) {
+                totalScore += questionScores[id];
+            }
+            
+            // Update progress display
+            updateProgress(totalScore);
+            
+            // Event listeners
+            document.querySelectorAll('.question-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const id = this.dataset.id;
+                    const passed = document.querySelector(`.passed[data-id='${id}']`);
+                    const total = document.querySelector(`.total[data-id='${id}']`);
+                    const score = parseFloat(this.dataset.score);
+                    
+                    const passedVal = parseInt(passed.value);
+                    const totalVal = parseInt(total.value);
+                    
+                    if (this.checked) {
+                        if (isNaN(totalVal) || totalVal === 0 || isNaN(passedVal) || passedVal > totalVal) {
+                            alert("Please fill testcases correctly.\n\nNote:\n- Total must be > 0\n- Passed ≤ Total");
+                            this.checked = false;
+                            return;
+                        }
+                        
+                        const questionScore = (passedVal / totalVal) * score;
+                        questionScores[id] = questionScore;
+                    } else {
+                        delete questionScores[id];
+                    }
+                    
+                    // Recalculate total score
+                    totalScore = Object.values(questionScores).reduce((sum, val) => sum + val, 0);
+                    updateProgress(totalScore);
+                    
+                    // Update backend
+                    syncParticipation(id, passedVal, totalVal, this.checked);
+                });
+            });
+            
+            document.querySelectorAll('.passed, .total').forEach(input => {
+                input.addEventListener('input', function() {
+                    const id = this.dataset.id;
+                    const checkbox = document.querySelector(`.question-checkbox[data-id='${id}']`);
+                    
+                    if (checkbox.checked) {
+                        alert("Changing testcases resets the score. Please recheck the box after verifying values.");
+                        totalScore -= questionScores[id] || 0;
+                        delete questionScores[id];
+                        checkbox.checked = false;
+                        updateProgress(totalScore);
+                    }
+                    
+                    const passedVal = parseInt(document.querySelector(`.passed[data-id='${id}']`).value);
+                    const totalVal = parseInt(document.querySelector(`.total[data-id='${id}']`).value);
+                    syncParticipation(id, passedVal, totalVal, false);
+                });
+            });
+            
+            // Update progress display
+            function updateProgress(score) {
+                const percent = (score / {{ total_score }}) * 100;
+                document.getElementById("totalScore").innerText = score.toFixed(2);
+                document.getElementById("progressPercent").innerText = percent.toFixed(1) + '%';
+                document.getElementById("progressFill").style.width = `${percent}%`;
+            }
+            
+            // Sync with backend
+            function syncParticipation(id, passedVal, totalVal, isSelected) {
+                fetch('/update_participation/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        contest_id: {{ contest.id }},
+                        question_id: id,
+                        passed: passedVal,
+                        total: totalVal,
+                        is_selected: isSelected
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateProgress(data.total_score);
+                    }
+                });
+            }
+            
+
+            
+            // Filter functionality
+            function handleCheckboxLogic(groupClass) {
+                const checkboxes = document.querySelectorAll(`.${groupClass}`);
+                const allBox = Array.from(checkboxes).find(cb => cb.value === "All");
+                
+                checkboxes.forEach(cb => {
+                    cb.addEventListener("change", () => {
+                        if (cb.value === "All" && cb.checked) {
+                            checkboxes.forEach(other => {
+                                if (other.value !== "All") other.checked = false;
+                            });
+                        } else if (cb.checked) {
+                            if (allBox.checked) allBox.checked = false;
+                        }
+                        applyFilters();
+                    });
+                });
+            }
+            
+            function getSelected(groupClass) {
+                const checked = Array.from(document.querySelectorAll(`.${groupClass}:checked`)).map(cb => cb.value);
+                return checked.includes("All") ? [] : checked;
+            }
+            
+            function applyFilters() {
+                const levelValues = getSelected("levelCheck");
+                const attemptValues = getSelected("attemptCheck");
+                
+                document.querySelectorAll("tbody tr").forEach(row => {
+                    const levelTag = row.querySelector(".difficulty");
+                    const checkbox = row.querySelector(".question-checkbox");
+                    const passedVal = parseInt(row.querySelector(".passed")?.value || 0);
+                    const totalVal = parseInt(row.querySelector(".total")?.value || 0);
+                    
+                    const levelText = levelTag?.textContent?.trim();
+                    const isChecked = checkbox?.checked;
+                    const isCompleted = isChecked && passedVal === totalVal;
+                    const isIncomplete = isChecked && passedVal < totalVal;
+                    const isUnattempted = !isChecked;
+                    
+                    let matchesLevel = levelValues.length === 0 || levelValues.includes(levelText);
+                    let matchesAttempt =
+                        attemptValues.length === 0 ||
+                        (attemptValues.includes("Completed") && isCompleted) ||
+                        (attemptValues.includes("Incomplete") && isIncomplete) ||
+                        (attemptValues.includes("Unattempted") && isUnattempted);
+                    
+                    row.style.display = (matchesLevel && matchesAttempt) ? "" : "none";
+                });
+            }
+            
+            // Initialize filters
+            handleCheckboxLogic("levelCheck");
+            handleCheckboxLogic("attemptCheck");
+        });
+    </script>
+</body>
+</html>
