@@ -18,8 +18,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 FORCE_SCRIPT_NAME = None
 
 # If running behind Vercel rewrite
-if os.environ.get("VERCEL") == "1":
-    FORCE_SCRIPT_NAME = '/dsajudge'
+# if os.environ.get("VERCEL") == "1":
+FORCE_SCRIPT_NAME = '/dsajudge'
 
 # Make sure redirects (like login) respect the prefix
 USE_X_FORWARDED_HOST = True
