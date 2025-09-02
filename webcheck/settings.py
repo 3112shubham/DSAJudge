@@ -15,6 +15,15 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+FORCE_SCRIPT_NAME = None
+
+# If running behind Vercel rewrite
+if os.environ.get("VERCEL") == "1":
+    FORCE_SCRIPT_NAME = '/dsajudge'
+
+# Make sure redirects (like login) respect the prefix
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
