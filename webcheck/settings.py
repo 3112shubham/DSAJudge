@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-=(u=e=2eaa%)*j&5wa8h&5%n*@5tx4d!jhl7v3-d7rjdgz*1i4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dsajudge.onrender.com']
+ALLOWED_HOSTS = ['dsajudge.onrender.com','js4.life']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
